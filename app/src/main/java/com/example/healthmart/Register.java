@@ -2,84 +2,65 @@ package com.example.healthmart;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 public class Register extends AppCompatActivity {
-    EditText edUsername, edEmail, edPass, edConfirm;
-    Button btn;
-    TextView tv;
+
+    private EditText username, password;
+    private Button submit;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        // Replacing EdgeToEdge with WindowCompat
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_register);
-        edUsername = findViewById(R.id.editTextName);
-        edEmail = findViewById(R.id.editTextEmail);
-        edPass = findViewById(R.id.editTextPassword);
-        edConfirm = findViewById(R.id.editTextConfirmPassword);
-        btn = findViewById(R.id.buttonRegister);
-        Database db = new Database(getApplicationContext(),"healthmart",null,1);
+
+        auth = FirebaseAuth.getInstance();
+
+        username = findViewById(R.id.editTextEmail);
+        password = findViewById(R.id.editTextPassword);
+        submit = findViewById(R.id.buttonRegister);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String uname = username.getText().toString();
+                String pass = password.getText().toString();
+                username.setText("This is called");
+
+                auth.createUserWithEmailAndPassword(uname, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Intent intent = new Intent(Register.this, Login.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                });
+            }
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String username = edUsername.getText().toString().trim();
-                String email = edEmail.getText().toString().trim();
-                String password = edPass.getText().toString().trim();
-                if (validateInputs()) {
-                    // Proceed with registration logic here (e.g., save to database)
-                   db.insertUser(username,email,password);
-
-                    Toast.makeText(Register.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Register.this, Login.class));
-                }
-            }
-        });
-    }
-
-    private boolean validateInputs() {
-        String username = edUsername.getText().toString().trim();
-        String email = edEmail.getText().toString().trim();
-        String password = edPass.getText().toString().trim();
-        String confirm = edConfirm.getText().toString().trim();
-
-        // Check if any field is empty
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirm)) {
-            Toast.makeText(Register.this, "Please fill all the details", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        // Check if email is valid
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(Register.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        // Check if passwords match
-        if (!password.equals(confirm)) {
-            Toast.makeText(Register.this, "Password and Confirm Password do not match", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return true;
     }
 }
