@@ -34,8 +34,8 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        onCreate(sqLiteDatabase);
+//        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+//        onCreate(sqLiteDatabase);
     }
 
     // Method to insert a user into the database

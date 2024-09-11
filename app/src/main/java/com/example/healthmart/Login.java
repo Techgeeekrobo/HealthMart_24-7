@@ -54,7 +54,10 @@ public class Login extends AppCompatActivity {
                     // Proceed with login logic here
                     if(db.login(username,password)==1){
                         Toast.makeText(Login.this, "Login success", Toast.LENGTH_SHORT).show();
-
+                        SharedPreferences sf = getSharedPreferences("shared_pref", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor ed = sf.edit();
+                        ed.putString("username",username);
+                        ed.apply();
                         startActivity(new Intent(Login.this,Home.class));
 
                     }else {

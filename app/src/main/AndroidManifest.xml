@@ -13,6 +13,12 @@
         android:theme="@style/Theme.HealthMart"
         tools:targetApi="31">
         <activity
+            android:name=".Doctor_details"
+            android:exported="false" />
+        <activity
+            android:name=".Find_doctor"
+            android:exported="false" />
+        <activity
             android:name=".Home"
             android:exported="false" />
         <activity
