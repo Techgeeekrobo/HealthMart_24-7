@@ -1,80 +1,94 @@
 package com.example.healthmart;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class Login extends AppCompatActivity {
-    EditText un;
-    EditText pass;
-    Button log;
-    TextView tv;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
-    @SuppressLint("MissingInflatedId")
+public class Login extends AppCompatActivity {
+    private EditText username, password;
+    private Button submit;
+    private TextView gotoSignUp;
+    private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        // Replacing EdgeToEdge with WindowCompat
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_login);
 
-        un = findViewById(R.id.username);
-        pass = findViewById(R.id.password);
-        log = findViewById(R.id.button);
-        tv = findViewById(R.id.Register);
+        auth = FirebaseAuth.getInstance();
+
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        submit = findViewById(R.id.button);
+        gotoSignUp = findViewById(R.id.Register);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Getting input from EditText fields
+                String uname = username.getText().toString().trim();
+                String pass = password.getText().toString().trim();
+
+                // Check if fields are empty
+                if (uname.isEmpty() || pass.isEmpty()) {
+                    Toast.makeText(Login.this, "Please fill in all the details", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Try Firebase login
+                    auth.signInWithEmailAndPassword(uname, pass)
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Login.this, Home.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // If login fails, show invalid credentials toast
+                                    Toast.makeText(Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+                                    Log.e("LoginError", e.getMessage());
+                                }
+                            });
+                }
+            }
+        });
+
+        gotoSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Login.this, Register.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        log.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = un.getText().toString().trim();
-                String password = pass.getText().toString().trim();
-                Database db = new Database(getApplicationContext(),"healthmart",null,1);
-
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(Login.this, "Please fill all details", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Proceed with login logic here
-                    if(db.login(username,password)==1){
-                        Toast.makeText(Login.this, "Login success", Toast.LENGTH_SHORT).show();
-                        SharedPreferences sf = getSharedPreferences("shared_pref", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor ed = sf.edit();
-                        ed.putString("username",username);
-                        ed.apply();
-                        startActivity(new Intent(Login.this,Home.class));
-
-                    }else {
-                        Toast.makeText(Login.this, "Invalid username/password", Toast.LENGTH_SHORT).show();
-                    }
-
-
-
-
-                }
-            }
-        });
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Login.this,Register.class));
-            }
-        });
     }
 }
+

@@ -31,7 +31,7 @@ public class Home extends AppCompatActivity {
                 SharedPreferences.Editor ed = sf.edit();
                 ed.clear();
                 ed.apply();
-                startActivity(new Intent(Home.this, Register.class));
+                startActivity(new Intent(Home.this, Login.class));
 
             }
         } );
@@ -45,6 +45,13 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Home.this, Find_doctor.class));
+            }
+        });
+        CardView buymedicine = findViewById(R.id.cardBuyMedicine);
+        buymedicine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Home.this, BuyMedicine.class));
             }
         });
 
