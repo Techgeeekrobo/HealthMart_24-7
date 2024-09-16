@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@android:color/holo_blue_light"
+    android:elevation="2dp"
+    android:layout_marginBottom="8dp">
+
+
+    <!-- Medicine Details: Name and Price -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/medicineName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medicine Name"
+            android:textSize="18sp"
+            android:textColor="#333"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:id="@+id/medicinePrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="₹100"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif" />
+    </LinearLayout>
+
+    <!-- Add to Cart Button -->
+    <Button
+        android:id="@+id/addToCartButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to Cart"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/black"
+        android:fontFamily="sans-serif-medium" />
+
+</LinearLayout>
+

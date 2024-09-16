@@ -1,6 +1,7 @@
 package com.example.healthmart;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,38 +27,48 @@ public class Login extends AppCompatActivity {
     private Button submit;
     private TextView gotoSignUp;
     private FirebaseAuth auth;
+    private SharedPreferences sharedPreferences;
+
+    private static final String PREFS_NAME = "UserSession";
+    private static final String IS_LOGGED_IN = "isLoggedIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Replacing EdgeToEdge with WindowCompat
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_login);
 
+        // Initialize Firebase Auth and SharedPreferences
         auth = FirebaseAuth.getInstance();
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         submit = findViewById(R.id.button);
         gotoSignUp = findViewById(R.id.Register);
 
+        // Check if the user is already logged in
+        if (isUserLoggedIn()) {
+            Intent intent = new Intent(Login.this, Home.class);
+            startActivity(intent);
+            finish();
+        }
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Getting input from EditText fields
                 String uname = username.getText().toString().trim();
                 String pass = password.getText().toString().trim();
 
-                // Check if fields are empty
                 if (uname.isEmpty() || pass.isEmpty()) {
                     Toast.makeText(Login.this, "Please fill in all the details", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Try Firebase login
                     auth.signInWithEmailAndPassword(uname, pass)
                             .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
                                     Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                    saveUserSession(true); // Save session state
                                     Intent intent = new Intent(Login.this, Home.class);
                                     startActivity(intent);
                                     finish();
@@ -66,7 +77,6 @@ public class Login extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    // If login fails, show invalid credentials toast
                                     Toast.makeText(Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                                     Log.e("LoginError", e.getMessage());
                                 }
@@ -90,5 +100,16 @@ public class Login extends AppCompatActivity {
             return insets;
         });
     }
-}
 
+    // Save user session in SharedPreferences
+    private void saveUserSession(boolean isLoggedIn) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_LOGGED_IN, isLoggedIn);
+        editor.apply();
+    }
+
+    // Check if the user session is saved
+    private boolean isUserLoggedIn() {
+        return sharedPreferences.getBoolean(IS_LOGGED_IN, false);
+    }
+}
