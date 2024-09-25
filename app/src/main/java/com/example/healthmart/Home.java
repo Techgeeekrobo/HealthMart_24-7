@@ -14,48 +14,60 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class Home extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
 
+public class Home extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
-        SharedPreferences sf = getSharedPreferences("shared_pref", Context.MODE_PRIVATE);
-       String username = sf.getString("username","").toString();
-        Toast.makeText(this,"Welcome  "+username,Toast.LENGTH_LONG).show();
-        CardView exit = findViewById(R.id.Logout);
-        exit.setOnClickListener(new View.OnClickListener() {
+
+        // Logout Card
+        CardView logout = findViewById(R.id.Logout);
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               //SharedPreferences.Editor ed = sf.edit();
-                //ed.clear();
-                //ed.apply();
+                // Sign out from Firebase
+                FirebaseAuth.getInstance().signOut();
+                // Navigate to Login Activity
                 startActivity(new Intent(Home.this, Login.class));
-
+                finish();  // Finish the current activity
             }
-        } );
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
         });
-        CardView finddoctor = findViewById(R.id.cardFindDoctor);
-        finddoctor.setOnClickListener(new View.OnClickListener() {
+
+        // Other Card Views
+        CardView findDoctor = findViewById(R.id.cardFindDoctor);
+        findDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Home.this, Find_doctor.class));
             }
         });
-        CardView buymedicine = findViewById(R.id.cardBuyMedicine);
-        buymedicine.setOnClickListener(new View.OnClickListener() {
+
+        CardView buyMedicine = findViewById(R.id.cardBuyMedicine);
+        buyMedicine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Home.this,
-                        BuyMedicine.class));
+                startActivity(new Intent(Home.this, BuyMedicine.class));
+            }
+        });
+
+        CardView orders = findViewById(R.id.OrderDetails);
+        orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Home.this, Orders.class));
             }
         });
 
 
-            }
-        }
+        // Handle Window Insets for Edge-to-Edge
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+}
+

@@ -29,8 +29,14 @@
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
 
-
-
+        <!-- Button to view the cart -->
+        <Button
+            android:id="@+id/viewCartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Cart"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="20dp" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
-

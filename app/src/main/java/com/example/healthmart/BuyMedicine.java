@@ -2,6 +2,7 @@ package com.example.healthmart;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -9,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.healthmart.Medicine;
+import com.example.healthmart.MedicineAdapter;
+import com.example.healthmart.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,6 +26,7 @@ public class BuyMedicine extends AppCompatActivity {
     private MedicineAdapter adapter;
     private List<Medicine> medicineList;
     private FirebaseFirestore db;
+    private Button viewCartButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +49,18 @@ public class BuyMedicine extends AppCompatActivity {
                 addToCart(medicine);
             }
         });
-
         medicineRecyclerView.setAdapter(adapter);
 
+        // Setup View Cart button
+        viewCartButton = findViewById(R.id.viewCartButton);
+        viewCartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Launch ViewCartActivity to display all items in the cart
+                Intent intent = new Intent(BuyMedicine.this, ViewCartActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadMedicines() {
@@ -71,3 +85,4 @@ public class BuyMedicine extends AppCompatActivity {
         });
     }
 }
+

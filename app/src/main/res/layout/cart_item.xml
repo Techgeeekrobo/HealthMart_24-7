@@ -1,0 +1,39 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:padding="10dp"
+
+    android:elevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light"
+        android:orientation="vertical">
+
+        <!-- Medicine Name -->
+        <TextView
+            android:id="@+id/textViewCartMedicineName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medicine Name"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
+
+        <!-- Medicine Price -->
+        <TextView
+            android:id="@+id/textViewCartMedicinePrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Price: $0.00"
+            android:textSize="16sp"
+            android:textColor="#555"
+            android:paddingTop="4dp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
