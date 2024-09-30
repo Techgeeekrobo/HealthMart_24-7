@@ -74,6 +74,16 @@ public class Find_doctor extends AppCompatActivity {
             Intent it = new Intent(Find_doctor.this, Doctor_details.class);
             it.putExtra("title", "cardiologist");
             startActivity(it);
+
+
+        });
+
+        CardView back = findViewById(R.id.exit);
+        back.setOnClickListener(view -> {
+            Intent it = new Intent(Find_doctor.this, Home.class);
+            startActivity(it);
+
+
         });
     }
 }

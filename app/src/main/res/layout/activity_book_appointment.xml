@@ -24,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Doctor's Name: "
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_below="@id/textViewTitle"
@@ -35,6 +36,7 @@
         android:layout_width="wrap_content"
         android:textStyle="bold"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Contact Number: "
         android:textSize="16sp"
         android:layout_below="@id/textViewDoctorName"
@@ -45,6 +47,7 @@
         android:id="@+id/textViewDoctorAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Address: "
         android:textSize="16sp"
         android:textStyle="bold"
@@ -57,6 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Consultancy Fees: "
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_below="@id/textViewDoctorAddress"
@@ -68,21 +72,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select Date:"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_below="@id/textViewDoctorFees"
         android:layout_marginTop="16dp" />
 
-    <!-- DatePicker (in compact mode like a spinner) -->
-    <DatePicker
-        android:id="@+id/datePicker"
+    <!-- Single Line Date TextView -->
+    <TextView
+        android:id="@+id/textViewDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
+        android:textColor="@color/black"
         android:layout_below="@id/datePickerLabel"
         android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:text="Select Date"
+        android:textSize="16sp"
+        android:clickable="true"
+        android:focusable="true" />
 
     <!-- Time Picker Label -->
     <TextView
@@ -92,18 +101,24 @@
         android:textStyle="bold"
         android:text="Select Time:"
         android:textSize="16sp"
-        android:layout_below="@id/datePicker"
+        android:textColor="@color/black"
+        android:layout_below="@id/textViewDate"
         android:layout_marginTop="16dp" />
 
-    <!-- TimePicker (in compact mode like a spinner) -->
-    <TimePicker
-        android:id="@+id/timePicker"
+    <!-- Single Line Time TextView -->
+    <TextView
+        android:id="@+id/textViewTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:timePickerMode="spinner"
         android:layout_below="@id/timePickerLabel"
         android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/black"
+        android:padding="8dp"
+        android:text="Select Time"
+        android:textSize="16sp"
+        android:clickable="true"
+        android:focusable="true" />
 
     <!-- Book Appointment Button -->
     <Button
@@ -111,9 +126,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:text="Book Appointment"
-        android:layout_below="@id/timePicker"
+        android:layout_below="@id/textViewTime"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp" />
 

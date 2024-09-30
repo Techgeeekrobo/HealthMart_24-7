@@ -48,6 +48,7 @@ public class Login extends AppCompatActivity {
         gotoSignUp = findViewById(R.id.Register);
 
         // Check if the user is already logged in
+        // NOTE: This will now require the user to log in again after a device restart
         if (isUserLoggedIn()) {
             Intent intent = new Intent(Login.this, Home.class);
             startActivity(intent);
@@ -101,10 +102,24 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Clear user session when the activity is destroyed (user must log in again)
+        clearUserSession();
+    }
+
     // Save user session in SharedPreferences
     private void saveUserSession(boolean isLoggedIn) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_LOGGED_IN, isLoggedIn);
+        editor.apply();
+    }
+
+    // Clear user session in SharedPreferences
+    private void clearUserSession() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(IS_LOGGED_IN);
         editor.apply();
     }
 

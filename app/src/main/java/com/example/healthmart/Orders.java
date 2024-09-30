@@ -6,15 +6,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Orders extends AppCompatActivity {
 
@@ -24,29 +26,38 @@ public class Orders extends AppCompatActivity {
 
     // Firebase Firestore instance
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;  // Firebase Authentication instance
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
 
+        // Initialize views and Firebase instances
         listView = findViewById(R.id.ordersListView);
         dataList = new ArrayList<>();
-
-        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();  // Get the current logged-in user
 
         // Set up adapter for ListView
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);
 
-        // Fetch and display data from both Orders and Appointments collections
-        fetchAppointments();
-        fetchOrders(); // Fetch orders as well
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail();
+            // Fetch and display data from both Orders and Appointments collections for the logged-in user
+            fetchAppointments(userEmail);
+            fetchOrders(userEmail);
+        } else {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void fetchAppointments() {
+    private void fetchAppointments(String userEmail) {
         db.collection("appointments")
+                .whereEqualTo("email", userEmail)  // Filter by logged-in user's email
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -54,6 +65,7 @@ public class Orders extends AppCompatActivity {
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                             List<DocumentSnapshot> documents = querySnapshot.getDocuments();
                             for (DocumentSnapshot document : documents) {
+                                // Retrieve appointment details
                                 String appointmentDate = document.getString("appointment_date");
                                 String appointmentTime = document.getString("appointment_time");
                                 String doctorName = document.getString("doctor_name");
@@ -65,13 +77,12 @@ public class Orders extends AppCompatActivity {
                                         "Date: " + appointmentDate + "\n" +
                                         "Time: " + appointmentTime + "\n" +
                                         "Address: " + doctorAddress + "\n" +
-                                        "Fees: " + doctorFees;
+                                        "Fees: " + (doctorFees != null ? doctorFees : "N/A");
 
                                 // Add the string to the data list
                                 dataList.add(appointmentDetails);
                             }
-                            // Notify the adapter about the updated data
-                            adapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();  // Notify the adapter about the updated data
                         } else {
                             Toast.makeText(Orders.this, "No Appointments found", Toast.LENGTH_SHORT).show();
                         }
@@ -82,8 +93,9 @@ public class Orders extends AppCompatActivity {
                 });
     }
 
-    private void fetchOrders() {
+    private void fetchOrders(String userEmail) {
         db.collection("Orders")
+                .whereEqualTo("user_email", userEmail)  // Filter by logged-in user's email
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -91,23 +103,25 @@ public class Orders extends AppCompatActivity {
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                             List<DocumentSnapshot> documents = querySnapshot.getDocuments();
                             for (DocumentSnapshot document : documents) {
-                                String medicineName = document.getString("medicine_name");
-                                String orderQuantity = document.getString("quantity");
-                                String deliveryAddress = document.getString("delivery_address");
-                                Long totalPrice = document.getLong("total_price");
+                                // Extract the list of items (array of medicine objects)
+                                List<Map<String, Object>> items = (List<Map<String, Object>>) document.get("items");
 
-                                // Build a string to display the order details
-                                String orderDetails = "Order - Medicine: " + medicineName + "\n" +
+                                if (items != null && !items.isEmpty()) {
+                                    for (Map<String, Object> item : items) {
+                                        String medicineName = (String) item.get("name");
+                                        Double priceDouble = (Double) item.get("price"); // Cast to Double
+                                        long totalPrice = priceDouble != null ? priceDouble.longValue() : 0; // Convert to Long
 
-                                        "Price: " + orderQuantity + "\n" +
-                                        "Address: " + deliveryAddress + "\n" +
-                                        "Total Price: " + totalPrice;
+                                        // Build a string to display the order details
+                                        String orderDetails = "Order - Medicine: " + (medicineName != null ? medicineName : "Unknown") + "\n" +
+                                                "Total Price: " + totalPrice;
 
-                                // Add the string to the data list
-                                dataList.add(orderDetails);
+                                        // Add the string to the data list
+                                        dataList.add(orderDetails);
+                                    }
+                                }
                             }
-                            // Notify the adapter about the updated data
-                            adapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();  // Notify the adapter about the updated data
                         } else {
                             Toast.makeText(Orders.this, "No Orders found", Toast.LENGTH_SHORT).show();
                         }
@@ -117,4 +131,6 @@ public class Orders extends AppCompatActivity {
                     }
                 });
     }
+
+
 }

@@ -5,6 +5,7 @@
     android:padding="16dp"
     android:background="@drawable/home_bg">
 
+    <!-- Title for Orders and Appointments -->
     <TextView
         android:id="@+id/titleOrders"
         android:layout_width="wrap_content"
@@ -12,15 +13,30 @@
         android:text="Your Orders and Appointments"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="#333"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="16dp" />
+        android:textColor="#000000" /> <!-- Black color for title -->
+      <!-- Added padding top for better spacing -->
 
+    <!-- Divider for separating title and content -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- ListView for Orders and Appointments -->
     <ListView
         android:id="@+id/ordersListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:layout_weight="1"  />    <!-- Makes ListView responsive to screen size -->
+    <!-- Ensures padding applies to ListView items -->
+
+
+    <!-- Footer (optional) for better visual balance -->
+
 </LinearLayout>
+

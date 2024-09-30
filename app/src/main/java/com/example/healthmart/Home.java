@@ -23,6 +23,18 @@ public class Home extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
+
+        CardView article = findViewById(R.id.HealthDoctor);
+        article.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // startActivity(new Intent(Home.this,articles.class));
+                startActivity(new Intent(Home.this, Healtharticle.class));
+            }
+        });
+
+
+
         // Logout Card
         CardView logout = findViewById(R.id.Logout);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -33,6 +45,17 @@ public class Home extends AppCompatActivity {
                 // Navigate to Login Activity
                 startActivity(new Intent(Home.this, Login.class));
                 finish();  // Finish the current activity
+            }
+        });
+
+        CardView labtest = findViewById(R.id.cardLabtest);
+        labtest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Sign out from Firebase
+                // Navigate to Login Activity
+                startActivity(new Intent(Home.this, Lab.class));
+                // Finish the current activity
             }
         });
 
@@ -60,6 +83,8 @@ public class Home extends AppCompatActivity {
                 startActivity(new Intent(Home.this, Orders.class));
             }
         });
+
+
 
 
         // Handle Window Insets for Edge-to-Edge

@@ -1,5 +1,6 @@
 package com.example.healthmart;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,28 +8,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Calendar;
 
-public class placeorder extends AppCompatActivity {
+public class Checkout extends AppCompatActivity {
 
     private EditText nameField, addressField, phoneField;
     private Button placeOrderButton;
     private Button datetime;
     private int selectedYear, selectedMonth, selectedDay;
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_placeorder);
-
-        // Initialize Views
-        nameField = findViewById(R.id.editTextName);
-        addressField = findViewById(R.id.editTextAddress);
-        phoneField = findViewById(R.id.editTextPhone);
-        datetime = findViewById(R.id.buttonDatePicker);
-        placeOrderButton = findViewById(R.id.buttonPlaceOrder);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_checkout);
+        nameField = findViewById(R.id.editTextName1);
+        addressField = findViewById(R.id.editTextAddress1);
+        phoneField = findViewById(R.id.editTextPhone1);
+        datetime = findViewById(R.id.buttonDatePicker1);
+        placeOrderButton = findViewById(R.id.buttonPlaceOrder1);
 
         // Initialize date with the current date
         final Calendar calendar = Calendar.getInstance();
@@ -39,7 +43,7 @@ public class placeorder extends AppCompatActivity {
         // Show DatePickerDialog when clicking the datetime button
         datetime.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    placeorder.this,
+                    Checkout.this,
                     (view, year, monthOfYear, dayOfMonth) -> {
                         selectedYear = year;
                         selectedMonth = monthOfYear;
@@ -53,7 +57,6 @@ public class placeorder extends AppCompatActivity {
             datePickerDialog.show();
         });
 
-        // Set listener for Place Order button
         placeOrderButton.setOnClickListener(v -> {
             String name = nameField.getText().toString().trim();
             String address = addressField.getText().toString().trim();
@@ -61,13 +64,13 @@ public class placeorder extends AppCompatActivity {
 
             // Validate input fields
             if (name.isEmpty() || address.isEmpty() || phone.isEmpty()) {
-                Toast.makeText(placeorder.this, "Please fill in all the details", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Checkout.this, "Please fill in all the details", Toast.LENGTH_SHORT).show();
                 return; // Exit the method if validation fails
             }
 
             // Validate phone number (basic validation)
             if (phone.length() < 10) {
-                Toast.makeText(placeorder.this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Checkout.this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
                 return; // Exit the method if validation fails
             }
 
@@ -76,11 +79,13 @@ public class placeorder extends AppCompatActivity {
             deliveryDate.set(selectedYear, selectedMonth, selectedDay);
 
             // Show success message and navigate to BuyMedicine activity
-            Toast.makeText(placeorder.this, "Order placed successfully!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(placeorder.this, BuyMedicine.class);
+            Toast.makeText(Checkout.this, "Order placed successfully!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Checkout.this, Lab.class);
             startActivity(intent);
 
             // Add code here to save the order details (name, address, phone, deliveryDate) to Firebase or any backend
         });
+
+
     }
 }

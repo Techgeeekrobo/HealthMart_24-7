@@ -15,6 +15,30 @@
         android:theme="@style/Theme.HealthMart"
         tools:targetApi="31">
         <activity
+            android:name=".Checkout"
+            android:exported="false" />
+        <activity
+            android:name=".Articles"
+            android:exported="false" />
+        <activity
+            android:name=".Healtharticle"
+            android:exported="false" />
+        <activity
+            android:name=".Labdetails"
+            android:exported="false" />
+        <activity
+            android:name=".CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Lab"
+            android:exported="false" />
+        <activity
+            android:name=".LabTestDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LabTest"
+            android:exported="false" />
+        <activity
             android:name=".Orders"
             android:exported="false" />
         <activity
@@ -22,9 +46,6 @@
             android:exported="false" />
         <activity
             android:name=".ViewCartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CartActivity"
             android:exported="false" />
         <activity
             android:name=".Vieworder"

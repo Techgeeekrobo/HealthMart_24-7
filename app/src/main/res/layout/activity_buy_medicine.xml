@@ -29,14 +29,34 @@
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
 
-        <!-- Button to view the cart -->
-        <Button
-            android:id="@+id/viewCartButton"
-            android:layout_width="wrap_content"
+        <!-- LinearLayout for Back and View Cart buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Cart"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:layout_marginTop="20dp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal">
+
+            <!-- Back Button -->
+            <Button
+                android:id="@+id/backButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:layout_marginEnd="16dp" />
+
+            <!-- Button to view the cart -->
+            <Button
+                android:id="@+id/viewCartButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Cart"
+                android:textColor="@color/black"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

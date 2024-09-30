@@ -1,5 +1,6 @@
 package com.example.healthmart;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.healthmart.Medicine;
-import com.example.healthmart.MedicineAdapter;
-import com.example.healthmart.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,8 +26,10 @@ public class BuyMedicine extends AppCompatActivity {
     private MedicineAdapter adapter;
     private List<Medicine> medicineList;
     private FirebaseFirestore db;
-    private Button viewCartButton;
+    private Button viewCartButton,exit;
+    private FirebaseAuth mAuth;  // Firebase Auth for getting the logged-in user
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +37,18 @@ public class BuyMedicine extends AppCompatActivity {
 
         medicineRecyclerView = findViewById(R.id.medicineRecyclerView);
         medicineRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+         exit = findViewById(R.id.backButton1);
+         exit.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 Intent I = new Intent(BuyMedicine.this,Home.class);
+                 startActivity(I);
 
+             }
+         });
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();  // Initialize FirebaseAuth
 
         // Fetch medicines from Firestore
         loadMedicines();
@@ -76,13 +87,30 @@ public class BuyMedicine extends AppCompatActivity {
     }
 
     private void addToCart(Medicine medicine) {
-        Map<String, Object> cartItem = new HashMap<>();
-        cartItem.put("name", medicine.getName());
-        cartItem.put("price", medicine.getPrice());
+        FirebaseUser currentUser = mAuth.getCurrentUser();  // Get current logged-in user
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail();  // Get user's email
+            Map<String, Object> cartItem = new HashMap<>();
+            cartItem.put("name", medicine.getName());
+            cartItem.put("price", medicine.getPrice());
 
-        db.collection("Cart").add(cartItem).addOnSuccessListener(documentReference -> {
-            Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
-        });
+            // Insert user's email in the correct field as "email"
+            cartItem.put("email", userEmail);  // Use "email" as the field name
+
+            db.collection("Cart").add(cartItem).addOnSuccessListener(documentReference -> {
+                Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(e -> {
+                // Log the error and display a failure message
+                Toast.makeText(this, "Failed to add to cart: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            // If no user is logged in, show an error or redirect to login
+            Toast.makeText(this, "Please login to add items to cart.", Toast.LENGTH_SHORT).show();
+
+            // Optional: Redirect to login activity
+            Intent loginIntent = new Intent(BuyMedicine.this, Login.class);
+            startActivity(loginIntent);
+        }
     }
-}
 
+}

@@ -14,7 +14,7 @@
 
         <!-- Name Field -->
         <EditText
-            android:id="@+id/editTextName"
+            android:id="@+id/editTextName1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Your Name"
@@ -26,7 +26,7 @@
 
         <!-- Address Field -->
         <EditText
-            android:id="@+id/editTextAddress"
+            android:id="@+id/editTextAddress1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Delivery Address"
@@ -38,7 +38,7 @@
 
         <!-- Phone Number Field -->
         <EditText
-            android:id="@+id/editTextPhone"
+            android:id="@+id/editTextPhone1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -51,7 +51,7 @@
 
         <!-- Date Picker Label -->
         <TextView
-            android:id="@+id/datePickerLabel"
+            android:id="@+id/datePickerLabel1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Date:"
@@ -61,7 +61,7 @@
 
         <!-- DatePicker Button -->
         <Button
-            android:id="@+id/buttonDatePicker"
+            android:id="@+id/buttonDatePicker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Date"
@@ -70,7 +70,7 @@
 
         <!-- Place Order Button -->
         <Button
-            android:id="@+id/buttonPlaceOrder"
+            android:id="@+id/buttonPlaceOrder1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Place Order"

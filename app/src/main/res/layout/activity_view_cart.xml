@@ -23,7 +23,7 @@
         android:text="Place Order"
         android:layout_marginTop="16dp"
         android:padding="12dp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textStyle="bold" />
 </LinearLayout>
 
