@@ -44,7 +44,6 @@ android:divider="@android:color/transparent"
 android:dividerHeight="15dp"
 android:layout_below="@+id/textviewDDtitle"
 android:layout_margin="16dp"
-    android:background="@android:color/holo_blue_light"
 android:layout_centerHorizontal="true"
 android:scrollbars="none"/>
 

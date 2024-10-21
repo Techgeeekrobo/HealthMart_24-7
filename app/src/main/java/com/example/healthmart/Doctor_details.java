@@ -3,7 +3,6 @@ package com.example.healthmart;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +22,7 @@ public class Doctor_details extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private ListView doctorListView;
-    private ArrayAdapter<String> adapter;
-    private List<String> doctorList;
+    private DoctorAdapter adapter;
     private List<Map<String, Object>> doctorDataList; // To store detailed doctor info
     private TextView textViewTitle;
 
@@ -54,10 +52,11 @@ public class Doctor_details extends AppCompatActivity {
             textViewTitle.setText("Doctors List");
         }
 
-        // Initialize the lists and adapter
-        doctorList = new ArrayList<>();
+        // Initialize the doctor data list
         doctorDataList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, doctorList);
+
+        // Initialize custom adapter
+        adapter = new DoctorAdapter(this, doctorDataList);
         doctorListView.setAdapter(adapter);
 
         // Fetch the doctors by type
@@ -95,7 +94,6 @@ public class Doctor_details extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        doctorList.clear(); // Clear the previous data
                         doctorDataList.clear(); // Clear detailed doctor data
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             // Retrieve the doctor details
@@ -113,13 +111,8 @@ public class Doctor_details extends AppCompatActivity {
 
                             // Add doctor data to the list
                             doctorDataList.add(doctorData);
-
-                            // Format the details into a string for display
-                            String doctorDetails = "Name: " + name + "\nContact: " + contact +
-                                    "\nAddress: " + address + "\nFees: " + consultancyFees;
-                            doctorList.add(doctorDetails);
                         }
-                        if (doctorList.isEmpty()) {
+                        if (doctorDataList.isEmpty()) {
                             // Show a message if no doctors are found
                             Toast.makeText(this, "No doctors found for the selected type.", Toast.LENGTH_SHORT).show();
                         }
@@ -135,5 +128,3 @@ public class Doctor_details extends AppCompatActivity {
                 });
     }
 }
-
-
